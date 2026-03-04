@@ -14,6 +14,6 @@ public abstract class MobileElement {
 	}
 
 	public void setPosition(Block position) {
-		this.position = position;
+		this.positionù=position;
 	}
 }
