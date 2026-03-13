@@ -17,6 +17,10 @@ public class Block {
 		return column;
 	}
 
+	public boolean samePosition(Block block) {
+		return block != null && line == block.getLine() && column == block.getColumn();
+	}
+
 	@Override
 	public String toString() {
 		return "Block [line=" + line + ", column=" + column + "]";

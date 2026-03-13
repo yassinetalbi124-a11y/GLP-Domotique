@@ -3,6 +3,7 @@ package engine.map;
 
 public class Map {
 	private Block[][] blocks;
+	private RoomManager roomManager;
 	
 
 	private int lineCount;
@@ -42,6 +43,18 @@ public class Map {
 
 	public Block getBlock(int line, int column) {
 		return blocks[line][column];
+	}
+
+	public RoomManager getRoomManager(){
+		return roomManager;
+	}
+
+	public void setRoomManager(RoomManager roomManager){
+		this.roomManager = roomManager;
+	}
+
+	public boolean isInside(int line, int column) {
+		return line >= 0 && line < lineCount && column >= 0 && column < columnCount;
 	}
 
 	public boolean isOnTop(Block block) {

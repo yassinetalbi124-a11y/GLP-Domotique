@@ -11,6 +11,7 @@ public interface MobileInterface {
 	
 	boolean isNear(Block position1,Block position2);
 	void moveCloser(Block target);
+	boolean tryMove(int line, int column);
 	
 	Master getMaster();
 	Switch getSwitch();

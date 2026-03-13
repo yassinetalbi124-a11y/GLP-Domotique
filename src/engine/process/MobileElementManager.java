@@ -26,12 +26,15 @@ public class MobileElementManager implements MobileInterface {
 	public void nextRound() {
 		Block masterPosition = master.getPosition();
 		Block switchPosition = interrupter.getPosition();
-		
-		if(!isNear(masterPosition,switchPosition)) {
+
+		if (!isNear(masterPosition, switchPosition)) {
 			moveCloser(switchPosition);
 			pressed = false;
 		}
-		if(isNear(masterPosition,switchPosition)&&(!pressed)) {
+
+		masterPosition = master.getPosition();
+
+		if (isNear(masterPosition, switchPosition) && (!pressed)) {
 			interrupter.toggle();
 			pressed = true;
 		}
@@ -43,30 +46,56 @@ public class MobileElementManager implements MobileInterface {
 		int absoluteLine = Math.abs(position1.getLine()-position2.getLine());
 		return (absoluteColumn<=1 &&absoluteLine<=1);
 	}
-	
+
+	public boolean tryMove(int line, int column) {
+		boolean moved = false;
+
+		if (map.isInside(line, column)) {
+			Block newPosition = map.getBlock(line, column);
+
+			if (!map.getRoomManager().isWall(newPosition)
+					&& map.getRoomManager().canMoveOn(newPosition)) {
+				master.setPosition(newPosition);
+				moved = true;
+			}
+		}
+
+		return moved;
+	}
+
 	public void moveCloser(Block target) {
-		
-		if(master.getPosition().getColumn()!=target.getColumn()){
-			if(master.getPosition().getColumn()>target.getColumn()) {
-				Block newPosition = map.getBlock(master.getPosition().getLine(),master.getPosition().getColumn()-1);
-				master.setPosition(newPosition);
+		Block currentPosition = master.getPosition();
+		int currentLine = currentPosition.getLine();
+		int currentColumn = currentPosition.getColumn();
+		int targetLine = target.getLine();
+		int targetColumn = target.getColumn();
+		boolean moved = false;
+
+		if (currentColumn != targetColumn) {
+			int columnShift;
+
+			if (currentColumn < targetColumn) {
+				columnShift = 1;
 			}
-			else if(master.getPosition().getColumn()<target.getColumn()) {
-				Block newPosition = map.getBlock(master.getPosition().getLine(),master.getPosition().getColumn()+1);
-				master.setPosition(newPosition);
+			else {
+				columnShift = -1;
 			}
+
+			moved = tryMove(currentLine, currentColumn + columnShift);
 		}
-		else if(master.getPosition().getLine()!=target.getLine()) {
-			if(master.getPosition().getLine()>target.getLine()) {
-				Block newPosition = map.getBlock(master.getPosition().getLine()-1,master.getPosition().getColumn());
-				master.setPosition(newPosition);
+
+		if ((!moved) && (currentLine != targetLine)) {
+			int lineShift;
+
+			if (currentLine < targetLine) {
+				lineShift = 1;
 			}
-			else if(master.getPosition().getLine()<target.getLine()) {
-				Block newPosition = map.getBlock(master.getPosition().getLine()+1,master.getPosition().getColumn());
-				master.setPosition(newPosition);
+			else {
+				lineShift = -1;
 			}
+
+			moved = tryMove(currentLine + lineShift, currentColumn);
 		}
-		
 	}
 	
 	public Master getMaster() {
