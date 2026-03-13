@@ -1,8 +1,8 @@
 package engine.rod;
 
 public interface State {
-    void diminuer(int pourcentage);
-    void augmenter(int pourcentage);
-    boolean estCritique();
+    void decrease(int pourcentage);
+    void increase(int pourcentage);
+    boolean isCritical();
     int getPourcentage();
 }

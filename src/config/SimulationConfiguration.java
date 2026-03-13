@@ -1,7 +1,6 @@
 package config;
 
 public class SimulationConfiguration {
-
 	public static final int SOURCE_TILE_SIZE = 32;
 	public static final int SCALE = 2;
 	public static final int BLOCK_SIZE = SOURCE_TILE_SIZE * SCALE;
@@ -12,7 +11,12 @@ public class SimulationConfiguration {
 	public static final int WINDOW_WIDTH = COLUMN_COUNT * BLOCK_SIZE;
 	public static final int WINDOW_HEIGHT = LINE_COUNT * BLOCK_SIZE;
 
+	public static final int GAME_SPEED = 300;
+
+	public static final int MASTER_DOWN = 0;
+	public static final int MASTER_LEFT = 1;
+	public static final int MASTER_RIGHT = 2;
+	public static final int MASTER_UP = 3;
 
 	public static final int STATE_UPDATE_FREQUENCY = 10;
-	public static final int GAME_SPEED = 300;
 }

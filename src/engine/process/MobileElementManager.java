@@ -1,5 +1,6 @@
 package engine.process;
 
+import config.SimulationConfiguration;
 import engine.item.Switch;
 import engine.map.Block;
 import engine.map.Map;
@@ -89,13 +90,34 @@ public class MobileElementManager implements MobileInterface {
 		if (map.isInside(line, column)) {
 			Block newPosition = map.getBlock(line, column);
 
-			if (!map.getRoomManager().isWall(newPosition) && map.getRoomManager().canMoveOn(newPosition)) {
+			if (map.getRoomManager().canMoveOn(newPosition)) {
+				updateMasterDirection(master.getPosition(), newPosition);
 				master.setPosition(newPosition);
 				moved = true;
 			}
 		}
 
 		return moved;
+	}
+
+	private void updateMasterDirection(Block oldPosition, Block newPosition) {
+		int oldLine = oldPosition.getLine();
+		int oldColumn = oldPosition.getColumn();
+		int newLine = newPosition.getLine();
+		int newColumn = newPosition.getColumn();
+
+		if (newLine > oldLine) {
+			master.setDirection(SimulationConfiguration.MASTER_DOWN);
+		}
+		else if (newLine < oldLine) {
+			master.setDirection(SimulationConfiguration.MASTER_UP);
+		}
+		else if (newColumn > oldColumn) {
+			master.setDirection(SimulationConfiguration.MASTER_RIGHT);
+		}
+		else if (newColumn < oldColumn) {
+			master.setDirection(SimulationConfiguration.MASTER_LEFT);
+		}
 	}
 
 	public Master getMaster() {

@@ -5,27 +5,12 @@ public class RoomManager {
 	private BathRoom bathroom;
 	private LivingRoom livingroom;
 	private Kitchen kitchen;
-	private boolean[][] walkableBlocks;
 
 	public RoomManager(BedRoom bedroom, BathRoom bathroom, LivingRoom livingroom, Kitchen kitchen) {
 		this.bedroom = bedroom;
 		this.bathroom = bathroom;
 		this.livingroom = livingroom;
 		this.kitchen = kitchen;
-		initializeWalkableBlocks();
-	}
-
-	private void initializeWalkableBlocks() {
-		walkableBlocks = new boolean[][] {
-				{ false, false, false, false, false, false, false, false, false, false, false, false },
-				{ false, false, false, true,  true,  false, false, false, true,  true,  true,  false },
-				{ false, false, false, true,  true,  false, false, false, true,  true,  true,  false },
-				{ false, false, false, false, true,  false, false, false, true,  false, false, false },
-				{ true,  true,  true,  true,  true,  true,  true,  true,  true,  true,  true,  true  },
-				{ false, false, true,  false, false, false, false, false, false, true,  false, false },
-				{ false, true,  true,  false, false, false, false, false, true,  true,  true,  false },
-				{ false, false, false, false, false, false, false, false, false, false, false, false }
-		};
 	}
 
 	public BedRoom getBedroom() {
@@ -87,28 +72,26 @@ public class RoomManager {
 			corridor = true;
 		}
 
-		if ((line == 5) && (column == 2 || column == 9)) {
+		if ((line == 5) && ((column == 2) || (column == 9))) {
 			corridor = true;
 		}
 
 		return corridor;
 	}
 
-	public boolean isWalkable(Block block) {
-		boolean walkable = false;
-		int line = block.getLine();
-		int column = block.getColumn();
-
-		if (line >= 0 && line < walkableBlocks.length) {
-			if (column >= 0 && column < walkableBlocks[line].length) {
-				walkable = walkableBlocks[line][column];
-			}
-		}
-
-		return walkable;
+	public boolean isBlockedByFurniture(Block block) {
+		return false;
 	}
 
 	public boolean canMoveOn(Block block) {
-		return isWalkable(block);
+		boolean canMove = false;
+
+		if ((isInRoom(block) || isInCorridor(block))
+				&& !isWall(block)
+				&& !isBlockedByFurniture(block)) {
+			canMove = true;
+		}
+
+		return canMove;
 	}
 }

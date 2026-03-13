@@ -10,17 +10,17 @@ public class Hygiene implements State {
         verifierBornes();
     }
 
-    public void diminuer(int pourcentage) {
+    public void increase(int pourcentage) {
         this.pourcentage = this.pourcentage - pourcentage;
         verifierBornes();
     }
 
-    public void augmenter(int pourcentage) {
+    public void decrease(int pourcentage) {
         this.pourcentage = this.pourcentage + pourcentage;
         verifierBornes();
     }
 
-    public boolean estCritique() {
+    public boolean isCritical() {
         return pourcentage <= 20;
     }
 

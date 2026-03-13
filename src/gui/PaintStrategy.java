@@ -17,10 +17,11 @@ import engine.process.GameUtility;
 
 public class PaintStrategy {
     private static final Color outsideColor = new Color(55, 48, 40);
-    private static final Color masterColor = new Color(0, 85, 255);
 
     private static final BufferedImage wallAndGround = GameUtility.readImage("src/images/WallandGround.png");
     private static final BufferedImage wallMaker = GameUtility.readImage("src/images/WalllMaker.png");
+    private static final BufferedImage masterBody = GameUtility.readImage("src/images/MasterBody.png");
+    private static final BufferedImage masterShadow = GameUtility.readImage("src/images/MasterShadow.png");
 
     private static final BufferedImage bedroomFloor = extract(wallAndGround, 0, 0, 32, 32);
     private static final BufferedImage kitchenFloor = extract(wallAndGround, 64, 32, 32, 32);
@@ -139,6 +140,29 @@ public class PaintStrategy {
         graphics.fillRect(x + blockSize / 4, y + blockSize / 4, blockSize / 2, blockSize / 2);
     }
 
+    private BufferedImage getMasterFrame(Master master) {
+        BufferedImage frame = null;
+        int spriteX = 0;
+        int spriteY = 2 * 32;
+        int direction = master.getDirection();
+
+        if (direction == SimulationConfiguration.MASTER_DOWN) {
+            spriteX = 0;
+        }
+        else if (direction == SimulationConfiguration.MASTER_LEFT) {
+            spriteX = 18 * 32;
+        }
+        else if (direction == SimulationConfiguration.MASTER_UP) {
+            spriteX = 12 * 32;
+        }
+        else if (direction == SimulationConfiguration.MASTER_RIGHT) {
+            spriteX = 6 * 32;
+        }
+
+        frame = extract(masterBody, spriteX, spriteY, 32, 32);
+        return frame;
+    }
+
     private void paintTile(int column, int line, BufferedImage image, Graphics graphics) {
         int blockSize = SimulationConfiguration.BLOCK_SIZE;
         int x = column * blockSize;
@@ -168,8 +192,19 @@ public class PaintStrategy {
         int x = position.getColumn() * blockSize;
         int y = position.getLine() * blockSize;
 
-        graphics.setColor(masterColor);
-        graphics.fillOval(x + blockSize / 4, y + blockSize / 4, blockSize / 2, blockSize / 2);
+        BufferedImage frame = getMasterFrame(master);
+
+        if (masterShadow != null) {
+            graphics.drawImage(masterShadow, x, y, blockSize, blockSize, null);
+        }
+
+        if (frame != null) {
+            graphics.drawImage(frame, x, y, blockSize, blockSize, null);
+        }
+        else {
+            graphics.setColor(new Color(0, 85, 255));
+            graphics.fillOval(x + blockSize / 4, y + blockSize / 4, blockSize / 2, blockSize / 2);
+        }
     }
 
     public void paint(Switch interrupter, Graphics graphics) {
