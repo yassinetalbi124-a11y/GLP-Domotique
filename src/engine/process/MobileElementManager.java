@@ -1,29 +1,31 @@
 package engine.process;
-import engine.item.*;
-import engine.mobile.*;
-import engine.map.*;
+
+import engine.item.Switch;
+import engine.map.Block;
+import engine.map.Map;
+import engine.mobile.Master;
 
 public class MobileElementManager implements MobileInterface {
 	private Master master;
 	private Map map;
-	
 	private Switch interrupter;
-	
-	private boolean pressed= false;
-	
+	private boolean pressed = false;
+
 	public MobileElementManager(Map map) {
 		this.map = map;
 	}
-	
+
 	public void set(Master master) {
 		this.master = master;
 	}
-	
+
 	public void set(Switch interrupter) {
 		this.interrupter = interrupter;
 	}
-	
+
 	public void nextRound() {
+		master.updateStates();
+
 		Block masterPosition = master.getPosition();
 		Block switchPosition = interrupter.getPosition();
 
@@ -39,28 +41,11 @@ public class MobileElementManager implements MobileInterface {
 			pressed = true;
 		}
 	}
-	
-	
-	public boolean isNear(Block position1,Block position2) {
-		int absoluteColumn = Math.abs(position1.getColumn()-position2.getColumn());
-		int absoluteLine = Math.abs(position1.getLine()-position2.getLine());
-		return (absoluteColumn<=1 &&absoluteLine<=1);
-	}
 
-	public boolean tryMove(int line, int column) {
-		boolean moved = false;
-
-		if (map.isInside(line, column)) {
-			Block newPosition = map.getBlock(line, column);
-
-			if (!map.getRoomManager().isWall(newPosition)
-					&& map.getRoomManager().canMoveOn(newPosition)) {
-				master.setPosition(newPosition);
-				moved = true;
-			}
-		}
-
-		return moved;
+	public boolean isNear(Block position1, Block position2) {
+		int absoluteColumn = Math.abs(position1.getColumn() - position2.getColumn());
+		int absoluteLine = Math.abs(position1.getLine() - position2.getLine());
+		return absoluteColumn <= 1 && absoluteLine <= 1;
 	}
 
 	public void moveCloser(Block target) {
@@ -97,13 +82,27 @@ public class MobileElementManager implements MobileInterface {
 			moved = tryMove(currentLine + lineShift, currentColumn);
 		}
 	}
-	
+
+	public boolean tryMove(int line, int column) {
+		boolean moved = false;
+
+		if (map.isInside(line, column)) {
+			Block newPosition = map.getBlock(line, column);
+
+			if (!map.getRoomManager().isWall(newPosition) && map.getRoomManager().canMoveOn(newPosition)) {
+				master.setPosition(newPosition);
+				moved = true;
+			}
+		}
+
+		return moved;
+	}
+
 	public Master getMaster() {
 		return master;
 	}
-	
+
 	public Switch getSwitch() {
 		return interrupter;
 	}
-	
 }

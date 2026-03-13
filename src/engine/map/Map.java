@@ -1,10 +1,8 @@
 package engine.map;
 
-
 public class Map {
 	private Block[][] blocks;
 	private RoomManager roomManager;
-	
 
 	private int lineCount;
 	private int columnCount;
@@ -19,14 +17,10 @@ public class Map {
 		}
 	}
 
-
 	private void init(int lineCount, int columnCount) {
-		this.lineCount = lineCount;	
+		this.lineCount = lineCount;
 		this.columnCount = columnCount;
-
 		blocks = new Block[lineCount][columnCount];
-		
-	
 	}
 
 	public Block[][] getBlocks() {
@@ -45,11 +39,11 @@ public class Map {
 		return blocks[line][column];
 	}
 
-	public RoomManager getRoomManager(){
+	public RoomManager getRoomManager() {
 		return roomManager;
 	}
 
-	public void setRoomManager(RoomManager roomManager){
+	public void setRoomManager(RoomManager roomManager) {
 		this.roomManager = roomManager;
 	}
 
@@ -80,5 +74,4 @@ public class Map {
 	public boolean isOnBorder(Block block) {
 		return isOnTop(block) || isOnBottom(block) || isOnLeftBorder(block) || isOnRightBorder(block);
 	}
-
 }
