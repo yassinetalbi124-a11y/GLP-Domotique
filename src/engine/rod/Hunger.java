@@ -10,12 +10,12 @@ public class Hunger implements State {
         verifierBornes();
     }
 
-    public void increase(int pourcentage) {
+    public void decrease(int pourcentage) {
         this.pourcentage = this.pourcentage - pourcentage;
         verifierBornes();
     }
 
-    public void decrease(int pourcentage) {
+    public void increase(int pourcentage) {
         this.pourcentage = this.pourcentage + pourcentage;
         verifierBornes();
     }

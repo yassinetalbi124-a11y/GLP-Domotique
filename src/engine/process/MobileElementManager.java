@@ -50,6 +50,139 @@ public class MobileElementManager implements MobileInterface {
 	}
 
 	public void moveCloser(Block target) {
+		Block nextTarget = getNextTarget(target);
+		moveStraightTo(nextTarget);
+	}
+
+	private Block getNextTarget(Block finalTarget) {
+		Block currentPosition = master.getPosition();
+		Block currentDoor = getCurrentRoomDoor(currentPosition);
+		Block targetDoor = getTargetDoor(finalTarget);
+		Block corridorTarget;
+
+		if (isInSameArea(currentPosition, finalTarget)) {
+			return finalTarget;
+		}
+
+		if (!map.getRoomManager().isInCorridor(currentPosition)) {
+			if ((currentDoor != null) && !currentPosition.samePosition(currentDoor)) {
+				return currentDoor;
+			}
+
+			if (currentDoor != null) {
+				corridorTarget = getCorridorAccessBlock(currentDoor);
+
+				if ((corridorTarget != null) && !currentPosition.samePosition(corridorTarget)) {
+					return corridorTarget;
+				}
+			}
+		}
+
+		if (map.getRoomManager().isInCorridor(currentPosition)) {
+			if (targetDoor != null) {
+				corridorTarget = getCorridorAccessBlock(targetDoor);
+
+				if ((corridorTarget != null) && !currentPosition.samePosition(corridorTarget)) {
+					return corridorTarget;
+				}
+
+				if (!currentPosition.samePosition(targetDoor)) {
+					return targetDoor;
+				}
+			}
+		}
+
+		return finalTarget;
+	}
+
+	private boolean isInSameArea(Block position1, Block position2) {
+		boolean sameArea = false;
+
+		if (map.getRoomManager().isInBedroom(position1) && map.getRoomManager().isInBedroom(position2)) {
+			sameArea = true;
+		}
+		else if (map.getRoomManager().isInBathroom(position1) && map.getRoomManager().isInBathroom(position2)) {
+			sameArea = true;
+		}
+		else if (map.getRoomManager().isInKitchen(position1) && map.getRoomManager().isInKitchen(position2)) {
+			sameArea = true;
+		}
+		else if (map.getRoomManager().isInLivingRoom(position1) && map.getRoomManager().isInLivingRoom(position2)) {
+			sameArea = true;
+		}
+		else if (map.getRoomManager().isInCorridor(position1) && map.getRoomManager().isInCorridor(position2)) {
+			sameArea = true;
+		}
+
+		return sameArea;
+	}
+
+	private Block getCurrentRoomDoor(Block block) {
+		Block door = null;
+
+		if (map.getRoomManager().isInBedroom(block)) {
+			door = map.getRoomManager().getBedroom().getDoor();
+		}
+		else if (map.getRoomManager().isInBathroom(block)) {
+			door = map.getRoomManager().getBathroom().getDoor();
+		}
+		else if (map.getRoomManager().isInKitchen(block)) {
+			door = map.getRoomManager().getKitchen().getDoor();
+		}
+		else if (map.getRoomManager().isInLivingRoom(block)) {
+			door = map.getRoomManager().getLivingroom().getDoor();
+		}
+
+		return door;
+	}
+
+	private Block getTargetDoor(Block block) {
+		Block door = null;
+
+		if (map.getRoomManager().isInBedroom(block)) {
+			door = map.getRoomManager().getBedroom().getDoor();
+		}
+		else if (map.getRoomManager().isInBathroom(block)) {
+			door = map.getRoomManager().getBathroom().getDoor();
+		}
+		else if (map.getRoomManager().isInKitchen(block)) {
+			door = map.getRoomManager().getKitchen().getDoor();
+		}
+		else if (map.getRoomManager().isInLivingRoom(block)) {
+			door = map.getRoomManager().getLivingroom().getDoor();
+		}
+
+		return door;
+	}
+
+	private Block getCorridorAccessBlock(Block door) {
+		Block corridorBlock = null;
+		int line = door.getLine();
+		int column = door.getColumn();
+
+		if (map.getRoomManager().isInCorridor(door)) {
+			corridorBlock = door;
+		}
+		else if (map.isInside(line + 1, column)) {
+			Block blockBelow = map.getBlock(line + 1, column);
+
+			if (map.getRoomManager().isInCorridor(blockBelow)) {
+				corridorBlock = blockBelow;
+			}
+		}
+
+		if ((corridorBlock == null) && map.isInside(line - 1, column)) {
+			Block blockAbove = map.getBlock(line - 1, column);
+
+			if (map.getRoomManager().isInCorridor(blockAbove)) {
+				corridorBlock = blockAbove;
+			}
+		}
+
+		return corridorBlock;
+	}
+
+	private void moveStraightTo(Block target) {
 		Block currentPosition = master.getPosition();
 		int currentLine = currentPosition.getLine();
 		int currentColumn = currentPosition.getColumn();

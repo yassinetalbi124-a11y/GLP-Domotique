@@ -43,7 +43,7 @@ public class GameBuilder {
 	}
 
 	public static void initializeSwitch(Map map, MobileInterface manager) {
-		Block block = map.getBlock(6, 9);
+		Block block = map.getBlock(2, 8);
 		Light light = new Light();
 		Switch interrupter = new Switch(light, block);
 		manager.set(interrupter);

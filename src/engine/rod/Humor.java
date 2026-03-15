@@ -11,15 +11,15 @@ public class Humor {
         etatHumeur = "Excellent";
     }
 
-    public double calculer(ArrayList<State> etats) {
+    public double calculer(ArrayList<State> states) {
         int somme = 0;
 
-        for (State etat : etats) {
-            somme = somme + etat.getPourcentage();
+        for (State state : states) {
+            somme = somme + state.getPourcentage();
         }
 
-        if (etats.size() > 0) {
-            niveau = somme / etats.size();
+        if (states.size() > 0) {
+            niveau = somme / states.size();
         }
         else {
             niveau = 0;
